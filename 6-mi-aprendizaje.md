@@ -1,3 +1,2 @@
 # COMPLETAR  
-Comparando sus conocimientos antes de hacer la práctica con sus conocimientos después de hacer la tarea, explicar los principales aprendizajes logrados para beneficio de su formación profesional.  
-Si solucionó un problema presentado o utilizó otros comandos que no se mencionan al realizar la práctica también se debe documentar.
+Antes de esta práctica, no sabía que existían los volúmenes en Docker ni cómo funcionaban, incluyendo los volúmenes nombrados y anónimos. Aprendí que los volúmenes permiten guardar datos de forma persistente, incluso si se eliminan los contenedores. Al instalar Drupal, ajusté permisos para que la instalación pudiera continuar, y en Nginx solucioné problemas de acceso. También comprendí que los volúmenes anónimos se crean automáticamente y se usan temporalmente, mientras que los volúmenes nombrados son más fáciles de gestionar. Ahora veo su importancia para crear cualquier tipo  de aplicaciones.
