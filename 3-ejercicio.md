@@ -6,10 +6,10 @@
 ```
 docker network create net-wp -d bridge
 ```
-3.1.
+![Imagen](img/3.1.png)
 
 
-En el esquema del ejercicio carpeta del contenedor (a) es: C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\db\mysql.env
+En el esquema del ejercicio carpeta del contenedor (a) es: /var/lib/mysql
 
 Ruta carpeta host: C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\db
 
@@ -17,46 +17,52 @@ Para que la información de MySQL persista, es necesario montar un volumen en el
 
 ### ¿Qué contiene la carpeta db del host?
 
-3.2
-
-La carpeta db contiene un archivo llamado mysql.env con el siguiente contenido:
-
-```
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE=mysql
-MYSQL_USER=said
-MYSQL_PASSWORD=root
-```
-
-Estas son variables de entorno para configurar el- contenedor MySQL, las cuales definen la contraseña del usuario root, el nombre de una base de datos, un usuario adicional, y su contraseña.
+La carpeta db del host se encuentra vacía.
 
 
 ### Crear un contenedor con la imagen mysql:8  en la red net-wp, configurar las variables de entorno: MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER y MYSQL_PASSWORD
 
 ```
-docker run -d --name mi_mysql -p 9500:80 --network net-wp -v "C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\www\wordpress.env:/etc/mysql/conf.d/wordpress.env" -v mysql_data:/var/lib/mysql mysql:8
+docker run -d --name mysql-container --network net-wp -v "C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\db:/var/lib/mysql" -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_DATABASE=mysql -e MYSQL_USER=said -e MYSQL_PASSWORD=root mysql:8
+
 ```
 Nota: La ruta completa está  entre comillas para manejar los espacios y caracteres especiales.
 
-3.3 
+![Imagen](img/3.3.png)
 
 ### ¿Qué observa en la carpeta db que se encontraba inicialmente vacía?
-# COMPLETAR CON LA RESPUESTA A LA PREGUNTA
+
+En la carpeta db, que al inicio estaba vacía, ahora veo varios directorios y archivos generados por MySQL. Esto incluye carpetas como #innodb_redo, #innodb_temp, mysql, performance_schema y sys, que son parte del sistema de almacenamiento de MySQL. Estos archivos y carpetas indican que MySQL está guardando los datos de manera persistente en el volumen que monté, lo que confirma que la configuración para la persistencia de datos está funcionando correctamente.
 
 ### Para que persista la información es necesario conocer en dónde wordpress almacena la información.
-# COMPLETAR LA SIGUIENTE ORACIÓN. REVISAR LA DOCUMENTACIÓN DE LA IMAGEN EN https://hub.docker.com/
-En el esquema del ejercicio la carpeta del contenedor (b) es (COMPLETAR CON LA RUTA)
 
-Ruta carpeta host: .../ejercicio3/www
+En el esquema del ejercicio la carpeta del contenedor (b) es /var/www/html/wp-content
+
+Ruta carpeta host: C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\www
 
 ### Crear un contenedor con la imagen wordpress en la red net-wp, configurar las variables de entorno WORDPRESS_DB_HOST, WORDPRESS_DB_USER, WORDPRESS_DB_PASSWORD y WORDPRESS_DB_NAME (los valores de estas variables corresponden a los del contenedor creado previamente)
-# COMPLETAR CON EL COMANDO
 
-### Personalizar la apariencia de wordpress y agregar una entrada
+```
+docker run -d --name wordpress-container --network net-wp -p 9500:80 -v "C:\Users\saidl\Desktop\EPN\6 Semestre\Construcción y Evolución de Software\Práctica 3\ejercicio3\www:/var/www/html/wp-content" -e WORDPRESS_DB_HOST=mysql-container -e WORDPRESS_DB_USER=said -e WORDPRESS_DB_PASSWORD=root -e WORDPRESS_DB_NAME=mysql wordpress:latest
+
+```
+
+![Imagen](img/3.4.png)
+
+![Imagen](img/3.5.png) 
+
+![Imagen](img/3.6.png)
+
+![Imagen](img/3.7.png)
+
+
 
 ### Eliminar el contenedor y crearlo nuevamente, ¿qué ha sucedido?
 
-# COMPLETAR CON LA RESPUESTA A LA PREGUNTA
+![Imagen](img/3.8.png)
 
+![Imagen](img/3.9.png)
+
+Eliminé el contenedor y lo volví a crear, y me di cuenta de que la persistencia de los datos ha funcionado gracias al volumen. Todos los datos almacenados en la base de datos de MySQL se mantuvieron como al incio. Al iniciar el nuevo contenedor, MySQL detectó y cargó los datos existentes sin problemas, mostrando la entrada que había configurado anteriormente.
 
 
